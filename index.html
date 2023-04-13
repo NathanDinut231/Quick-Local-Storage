@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+  
+    <h1>Enter First Name</h1>
+    <form id="form">
+        <input class="input" type="text" id="firstName" placeholder="First Name">
+        <button class="btn" type="submit">Enter</button>
+    </form>
+
+    <h2>Search for Name</h2>
+    <input class="input" type="text" id="searchName" placeholder="Search for a Name">
+    <button class="btn" id="searchButton" type="button">Search</button>
+    <div id="searchResult"></div>
+
+    <h2>Stored Names</h2>
+    <ul id="nameList"></ul>
+    <button id="clear">Clear</button>
+    
+
+    <script>
+        const form = document.getElementById('form');
+        const firstNameInput = document.getElementById('firstName');
+        const searchNameInput = document.getElementById('searchName');
+        const searchButton = document.getElementById('searchButton');
+        const searchResult = document.getElementById('searchResult');
+        const nameList = document.getElementById('nameList');
+        const clearBtn = document.getElementById('clear');
+
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const firstName = firstNameInput.value;
+            const storedNames = localStorage.getItem('names') ? JSON.parse(localStorage.getItem('names')) : [];
+            storedNames.push(firstName);
+            localStorage.setItem('names', JSON.stringify(storedNames));
+            console.log(`"${firstName}" has been saved to local storage.`);
+            renderNameList();
+           
+        });
+
+        searchButton.addEventListener('click', function() {
+            const searchTerm = searchNameInput.value;
+            const storedNames = localStorage.getItem('names') ? JSON.parse(localStorage.getItem('names')) : [];
+            const matchingNames = storedNames.filter(name => name.toLowerCase() === searchTerm.toLowerCase());
+            if (matchingNames.length > 0) {
+                searchResult.innerText = `The name "${matchingNames[0]}" was found in local storage.`;
+            } else {
+                searchResult.innerText = `The name "${searchTerm}" was not found in local storage.`;
+            }
+        });
+
+        function renderNameList() {
+            const storedNames = localStorage.getItem('names') ? JSON.parse(localStorage.getItem('names')) : [];
+            nameList.innerHTML = '';
+            for (let name of storedNames) {
+                const li = document.createElement('li');
+                li.innerText = name;
+                nameList.appendChild(li);
+            }
+        }
+
+        renderNameList();
+
+        clearBtn.addEventListener('click', function(){
+                    localStorage.clear();
+                    nameList.innerHTML = '';
+        }
+    )
+    </script>
+</body>
+</html>
+
+</body>
+</html>
+
